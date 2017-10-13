@@ -2,7 +2,9 @@
 
 ## Download and get vagrant box running
 
-## Install watchman
+## Post Vagrant Up
+
+### Install watchman
  - git clone https://github.com/facebook/watchman.git
  - cd watchman
  - git checkout v4.9.0

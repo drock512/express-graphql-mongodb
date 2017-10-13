@@ -13,6 +13,9 @@
 export class Todo {}
 export class User {}
 
+// Import mongoose models
+import Contact from './models/contact';
+
 // Mock authenticated ID
 const VIEWER_ID = 'me';
 
@@ -32,6 +35,34 @@ let nextTodoId = 0;
 addTodo('Taste JavaScript', true);
 addTodo('Buy a unicorn', false);
 
+export function addContact(obj) {
+  const contact = new Contact(obj);
+  return contact.save().then(doc => doc._id);
+}
+
+export function getContact(id) {
+  return Contact.findById(id);
+}
+
+export function changeContact(id, obj) {
+  return Contact.findByIdAndUpdate(id, obj);
+}
+
+export function removeContact(id) {
+  return Contact.findByIdAndRemove(id).then((doc) => {
+    // remove references to removed contact
+    Contact.find({ friends: doc._id }).then((docs) => {
+      docs.map(d => {
+        d.friends = d.friends.filter(f => f !== doc._id);
+        d.save();
+      });
+    });
+
+    return doc;
+  });
+}
+
+//----------------------------------
 export function addTodo(text, complete) {
   const todo = new Todo();
   todo.complete = !!complete;

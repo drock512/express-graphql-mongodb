@@ -15,6 +15,7 @@ import graphQLHTTP from 'express-graphql';
 import path from 'path';
 import webpack from 'webpack';
 import WebpackDevServer from 'webpack-dev-server';
+import mongoose from 'mongoose';
 import {schema} from './data/schema';
 
 const APP_PORT = 3000;
@@ -26,6 +27,12 @@ graphQLServer.use('/', graphQLHTTP({schema, pretty: true}));
 graphQLServer.listen(GRAPHQL_PORT, () => console.log(
   `GraphQL Server is now running on http://localhost:${GRAPHQL_PORT}`
 ));
+
+// Connect mongo database
+mongoose.Promise = global.Promise;
+mongoose.connect('mongodb://localhost/contacts', { useMongoClient: true })
+  .then(() => console.info("==> 🌎  connected to mongodb"))
+  .catch(err => console.error("Failed to conenct to mongodb due to:", err));
 
 // Serve the Relay app
 const compiler = webpack({
