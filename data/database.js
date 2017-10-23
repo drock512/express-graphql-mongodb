@@ -45,20 +45,19 @@ export function getContact(id) {
 }
 
 export function changeContact(id, obj) {
-  return Contact.findByIdAndUpdate(id, obj);
+  return Contact.findByIdAndUpdate(id, obj, { new: true });
 }
 
 export function removeContact(id) {
   return Contact.findByIdAndRemove(id).then((doc) => {
     // remove references to removed contact
-    Contact.find({ friends: doc._id }).then((docs) => {
-      docs.map(d => {
-        d.friends = d.friends.filter(f => f !== doc._id);
-        d.save();
-      });
-    });
-
-    return doc;
+    return Contact.find({ friends: doc._id }).then((docs) => {
+      return Promise.all(docs.map(d => {
+        d.friends = d.friends.filter(f => String(f) !== String(doc._id));
+        return d.save();
+      }));
+    })
+    .then(() => doc);
   });
 }
 

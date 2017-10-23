@@ -1,6 +1,24 @@
 # express-graphql-mongodb
 
-## Download and get vagrant box running
+## Vagrant box setup/config on puphpet
+ - OS: Ubuntu Trusty
+ - Folder Source: /Users/dalemcneill/Projects/express-graphql-mongodb
+
+### NGINX
+ - contacts.dev (and www.contacts.dev)
+ - project root: /var/www
+ - location root: /var/www
+ - proxy: http://localhost:3000
+ - proxy set header:
+ -- Upgrade $http_upgrade
+ -- Connection "upgrade"
+ -- Host $host
+
+### NODE
+ - Install version 7
+
+### MongoDB
+ - Install with defaults
 
 ## Post Vagrant Up
 
@@ -13,6 +31,17 @@
  - ./configure
  - make
  - sudo make install
+
+### Upgrade to latest npm
+ - sudo npm install npm -g
+
+### Upgrade to latest node
+ - sudo npm cache clean -f
+ - sudo npm install -g n
+ - sudo n stable
+
+### Extra to fix npm install hangs
+ - sudo chown -R $USER:$(id -gn $USER) /home/vagrant/.config
 
 ## Installation
 
