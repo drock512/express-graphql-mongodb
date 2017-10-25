@@ -26,6 +26,7 @@ import {
   connectionDefinitions,
   connectionFromArray,
   cursorForObjectInConnection,
+  offsetToCursor,
   fromGlobalId,
   globalIdField,
   mutationWithClientMutationId,
@@ -46,7 +47,15 @@ import {
   removeCompletedTodos,
   removeTodo,
   renameTodo,
+
+  addContact,
+  getContact,
+  getContacts,
+  changeContact,
+  removeContact,
 } from './database';
+
+import Contact from './models/contact';
 
 const {nodeInterface, nodeField} = nodeDefinitions(
   (globalId) => {
@@ -55,6 +64,8 @@ const {nodeInterface, nodeField} = nodeDefinitions(
       return getTodo(id);
     } else if (type === 'User') {
       return getUser(id);
+    } else if (type === 'Contact') {
+      return getContact(id);
     }
     return null;
   },
@@ -63,10 +74,44 @@ const {nodeInterface, nodeField} = nodeDefinitions(
       return GraphQLTodo;
     } else if (obj instanceof User) {
       return GraphQLUser;
+    } else if (obj instanceof Contact) {
+      return GraphQLContact;
     }
     return null;
   }
 );
+
+const GraphQLContact = new GraphQLObjectType({
+  name: 'Contact',
+  fields: () => ({
+    id: globalIdField('Contact'),
+    name: {
+      type: GraphQLString,
+      resolve: (obj) => obj.name,
+    },
+    email: {
+      type: GraphQLString,
+      resolve: (obj) => obj.email,
+    },
+    friends: {
+      type: new GraphQLList(GraphQLContact),
+      resolve: (obj) => obj.friends.map(f => getContact(f)),
+    },
+    totalFriends: {
+      type: GraphQLInt,
+      resolve: (obj) => obj.friends.length,
+    },
+  }),
+  interfaces: [nodeInterface],
+});
+
+const {
+  connectionType: ContactConnection,
+  edgeType: GraphQLContactEdge,
+} = connectionDefinitions({
+  name: 'Contact',
+  nodeType: GraphQLContact,
+});
 
 const GraphQLTodo = new GraphQLObjectType({
   name: 'Todo',
@@ -127,7 +172,88 @@ const Query = new GraphQLObjectType({
       type: GraphQLUser,
       resolve: () => getViewer(),
     },
+    contacts: {
+      type: ContactConnection,
+      args: {
+        search: {
+          type: GraphQLString,
+          defaultValue: '',
+        },
+        ...connectionArgs,
+      },
+      resolve: (obj, {search, ...args}) =>
+        getContacts(search).then(arr => connectionFromArray(arr, args)),
+    },
     node: nodeField,
+  },
+});
+
+const GraphQLAddContactMutation = mutationWithClientMutationId({
+  name: 'AddContact',
+  inputFields: {
+    name: { type: new GraphQLNonNull(GraphQLString) },
+    email: { type: new GraphQLNonNull(GraphQLString) },
+  },
+  outputFields: {
+    contactEdge: {
+      type: GraphQLContactEdge,
+      resolve: ({localContactId}) => {
+        return getContact(localContactId).then((contact) => {
+          return getContacts().then((arr) => {
+            // since arr and contact are separate, need to find index manually
+            let index;
+            arr.forEach((c, i) => {
+              if (c._id === contact._id) {
+                index = i;
+              }
+            });
+            return {
+              cursor: offsetToCursor(index),
+              node: contact,
+            }
+          });
+        });
+      },
+    },
+  },
+  mutateAndGetPayload: (obj) => {
+    return addContact(obj).then((id) => ({ localContactId: id }));
+  },
+});
+
+const GraphQLEditContactMutation = mutationWithClientMutationId({
+  name: 'EditContact',
+  inputFields: {
+    name: { type: GraphQLString },
+    email: { type: GraphQLString },
+    id: { type: new GraphQLNonNull(GraphQLID) },
+  },
+  outputFields: {
+    contact: {
+      type: GraphQLContact,
+      resolve: ({localContactId}) => getContact(localContactId),
+    },
+  },
+  mutateAndGetPayload: ({id, ...obj}) => {
+    const localContactId = fromGlobalId(id).id;
+    return changeContact(localContactId, obj).then((doc) => ({ localContactId: doc._id }));
+  },
+});
+
+const GraphQLRemoveContactMutation = mutationWithClientMutationId({
+  name: 'RemoveContact',
+  inputFields: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+  },
+  outputFields: {
+    deletedContactId: {
+      type: GraphQLID,
+      resolve: ({id}) => id,
+    },
+  },
+  mutateAndGetPayload: ({id}) => {
+    const localContactId = fromGlobalId(id).id;
+    return removeContact(localContactId).then((doc) => ({ id }));
   },
 });
 
@@ -266,6 +392,9 @@ const GraphQLRenameTodoMutation = mutationWithClientMutationId({
 const Mutation = new GraphQLObjectType({
   name: 'Mutation',
   fields: {
+    addContact: GraphQLAddContactMutation,
+    editContact: GraphQLEditContactMutation,
+    removeContact: GraphQLRemoveContactMutation,
     addTodo: GraphQLAddTodoMutation,
     changeTodoStatus: GraphQLChangeTodoStatusMutation,
     markAllTodos: GraphQLMarkAllTodosMutation,

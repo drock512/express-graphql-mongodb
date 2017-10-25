@@ -44,6 +44,10 @@ export function getContact(id) {
   return Contact.findById(id);
 }
 
+export function getContacts(search) {
+  return Contact.find().exec();
+}
+
 export function changeContact(id, obj) {
   return Contact.findByIdAndUpdate(id, obj, { new: true });
 }
