@@ -95,7 +95,7 @@ const GraphQLContact = new GraphQLObjectType({
     },
     friends: {
       type: new GraphQLList(GraphQLContact),
-      resolve: (obj) => obj.friends.map(f => getContact(f)),
+      resolve: (obj) => Promise.all(obj.friends.map(f => getContact(f))),
     },
     totalFriends: {
       type: GraphQLInt,
@@ -193,6 +193,7 @@ const GraphQLAddContactMutation = mutationWithClientMutationId({
   inputFields: {
     name: { type: new GraphQLNonNull(GraphQLString) },
     email: { type: new GraphQLNonNull(GraphQLString) },
+    friends: { type: new GraphQLList(GraphQLString) },
   },
   outputFields: {
     contactEdge: {
@@ -217,6 +218,9 @@ const GraphQLAddContactMutation = mutationWithClientMutationId({
     },
   },
   mutateAndGetPayload: (obj) => {
+    if (obj.friends && obj.friends.length) {
+      obj.friends = obj.friends.map((id) => fromGlobalId(id).id);
+    }
     return addContact(obj).then((id) => ({ localContactId: id }));
   },
 });
@@ -226,6 +230,7 @@ const GraphQLEditContactMutation = mutationWithClientMutationId({
   inputFields: {
     name: { type: GraphQLString },
     email: { type: GraphQLString },
+    friends: { type: new GraphQLList(GraphQLString) },
     id: { type: new GraphQLNonNull(GraphQLID) },
   },
   outputFields: {
@@ -236,6 +241,9 @@ const GraphQLEditContactMutation = mutationWithClientMutationId({
   },
   mutateAndGetPayload: ({id, ...obj}) => {
     const localContactId = fromGlobalId(id).id;
+    if (obj.friends && obj.friends.length) {
+      obj.friends = obj.friends.map((f) => fromGlobalId(id).id);
+    }
     return changeContact(localContactId, obj).then((doc) => ({ localContactId: doc._id }));
   },
 });

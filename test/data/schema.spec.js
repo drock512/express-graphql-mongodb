@@ -234,5 +234,72 @@ describe("Schema", function() {
         })
         .catch((err) => done(err));
     });
+
+    it("should create contact with friend and return contact with friend", function(done) {
+      let query;
+      const fetchQuery = `
+        query Q {
+          contacts(first: 2000) {
+            edges {
+              cursor,
+              node {
+                id,
+                name,
+                email
+              },
+            },
+          },
+        }
+      `;
+
+      // Preload mock DB
+      const contact1 = new ContactModel({
+        name: 'Mario',
+        email: 'mario@home.com',
+        friends: []
+      });
+
+      let mario;
+      let luigi;
+
+      contact1.save()
+        .then(() => graphql(schema, fetchQuery))
+        .then((result) => {
+          mario = result.data.contacts.edges.find(c => c.node.name === contact1.name);
+          query = `
+            mutation createContact {
+              addContact(input: {
+                name: "Luigi",
+                email: "luigi@home.com",
+                friends: ["${mario.node.id}"]
+              }) {
+                contactEdge {
+                  cursor,
+                  node {
+                    id,
+                    name,
+                    email,
+                    friends {
+                      name
+                    }
+                  }
+                }
+              },
+            }
+          `;
+          return Promise.resolve();
+        })
+        .then(() => graphql(schema, query))
+        .then((result) => {
+          expect(result.data.addContact.contactEdge).to.be.a('object');
+          expect(result.data.addContact.contactEdge.node.name).to.equal('Luigi');
+          expect(result.data.addContact.contactEdge.node.email).to.equal('luigi@home.com');
+          expect(result.data.addContact.contactEdge.node.friends).to.deep.equal([{
+            name: 'Mario'
+          }]);
+          done();
+        })
+        .catch((err) => done(err));
+    });
   });
 });
