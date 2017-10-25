@@ -242,7 +242,7 @@ const GraphQLEditContactMutation = mutationWithClientMutationId({
   mutateAndGetPayload: ({id, ...obj}) => {
     const localContactId = fromGlobalId(id).id;
     if (obj.friends && obj.friends.length) {
-      obj.friends = obj.friends.map((f) => fromGlobalId(id).id);
+      obj.friends = obj.friends.map((f) => fromGlobalId(f).id);
     }
     return changeContact(localContactId, obj).then((doc) => ({ localContactId: doc._id }));
   },

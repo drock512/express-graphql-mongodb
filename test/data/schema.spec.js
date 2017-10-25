@@ -235,7 +235,7 @@ describe("Schema", function() {
         .catch((err) => done(err));
     });
 
-    it("should create contact with friend and return contact with friend", function(done) {
+    it("should create and edit contact with friend and return contact with friend", function(done) {
       let query;
       const fetchQuery = `
         query Q {
@@ -296,6 +296,34 @@ describe("Schema", function() {
           expect(result.data.addContact.contactEdge.node.email).to.equal('luigi@home.com');
           expect(result.data.addContact.contactEdge.node.friends).to.deep.equal([{
             name: 'Mario'
+          }]);
+          luigi = result.data.addContact.contactEdge.node;
+          query = `
+            mutation changeContact {
+              editContact(input: {
+                id: "${mario.node.id}",
+                friends: ["${luigi.id}"]
+              }) {
+                contact {
+                  id,
+                  name,
+                  email,
+                  friends {
+                    name
+                  }
+                }
+              },
+            }
+          `;
+          return Promise.resolve();
+        })
+        .then(() => graphql(schema, query))
+        .then((result) => {
+          expect(result.data.editContact.contact).to.be.a('object');
+          expect(result.data.editContact.contact.name).to.equal('Mario');
+          expect(result.data.editContact.contact.email).to.equal('mario@home.com');
+          expect(result.data.editContact.contact.friends).to.deep.equal([{
+            name: 'Luigi'
           }]);
           done();
         })
