@@ -141,6 +141,18 @@ const GraphQLUser = new GraphQLObjectType({
   name: 'User',
   fields: {
     id: globalIdField('User'),
+    contacts: {
+      type: ContactConnection,
+      args: {
+        search: {
+          type: GraphQLString,
+          defaultValue: '',
+        },
+        ...connectionArgs,
+      },
+      resolve: (obj, {search, ...args}) =>
+        getContacts(search).then(arr => connectionFromArray(arr, args)),
+    },
     todos: {
       type: TodosConnection,
       args: {

@@ -26,7 +26,7 @@ import {
   Store,
 } from 'relay-runtime';
 
-import TodoApp from './components/TodoApp';
+import ContactApp from './components/ContactApp';
 
 // Useful for debugging, but remember to remove for a production deploy.
 installRelayDevTools();
@@ -62,14 +62,14 @@ ReactDOM.render(
     query={graphql`
       query appQuery {
         viewer {
-          ...TodoApp_viewer
+          ...ContactApp_viewer
         }
       }
     `}
     variables={{}}
     render={({error, props}) => {
       if (props) {
-        return <TodoApp viewer={props.viewer} />;
+        return <ContactApp viewer={props.viewer} />;
       } else {
         return <div>Loading</div>;
       }

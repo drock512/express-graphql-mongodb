@@ -1,5 +1,9 @@
 # express-graphql-mongodb
 
+## Install watchman on local machine (this is required to run 'npm run build')
+ - brew update
+ - brew install watchman
+
 ## Vagrant box setup/config on puphpet
  - OS: Ubuntu Trusty
  - Folder Source: /Users/dalemcneill/Projects/express-graphql-mongodb
@@ -22,16 +26,6 @@
 
 ## Post Vagrant Up
 
-### Install watchman
- - git clone https://github.com/facebook/watchman.git
- - cd watchman
- - git checkout v4.9.0
- - sudo apt-get install -y autoconf automake build-essential python-dev
- - ./autogen.sh
- - ./configure
- - make
- - sudo make install
-
 ### Upgrade to latest npm
  - sudo npm install npm -g
 
@@ -41,7 +35,7 @@
  - sudo n stable
 
 ### Extra to fix npm install hangs
- - sudo chown -R $USER:$(id -gn $USER) /home/vagrant/.config
+ - (still needed?) sudo chown -R $USER:$(id -gn $USER) /home/vagrant/.config
 
 ## Installation
 
@@ -55,6 +49,11 @@ Set up generated files:
 
 ```
 npm run update-schema
+```
+
+From local machine:
+
+```
 npm run build
 ```
 

@@ -1,3 +1,15 @@
+input AddContactInput {
+  name: String!
+  email: String!
+  friends: [String]
+  clientMutationId: String
+}
+
+type AddContactPayload {
+  contactEdge: ContactEdge
+  clientMutationId: String
+}
+
 input AddTodoInput {
   text: String!
   clientMutationId: String
@@ -21,6 +33,46 @@ type ChangeTodoStatusPayload {
   clientMutationId: String
 }
 
+type Contact implements Node {
+  # The ID of an object
+  id: ID!
+  name: String
+  email: String
+  friends: [Contact]
+  totalFriends: Int
+}
+
+# A connection to a list of items.
+type ContactConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [ContactEdge]
+}
+
+# An edge in a connection.
+type ContactEdge {
+  # The item at the end of the edge
+  node: Contact
+
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+input EditContactInput {
+  name: String
+  email: String
+  friends: [String]
+  id: ID!
+  clientMutationId: String
+}
+
+type EditContactPayload {
+  contact: Contact
+  clientMutationId: String
+}
+
 input MarkAllTodosInput {
   complete: Boolean!
   clientMutationId: String
@@ -33,6 +85,9 @@ type MarkAllTodosPayload {
 }
 
 type Mutation {
+  addContact(input: AddContactInput!): AddContactPayload
+  editContact(input: EditContactInput!): EditContactPayload
+  removeContact(input: RemoveContactInput!): RemoveContactPayload
   addTodo(input: AddTodoInput!): AddTodoPayload
   changeTodoStatus(input: ChangeTodoStatusInput!): ChangeTodoStatusPayload
   markAllTodos(input: MarkAllTodosInput!): MarkAllTodosPayload
@@ -64,6 +119,7 @@ type PageInfo {
 
 type Query {
   viewer: User
+  contacts(search: String = "", after: String, first: Int, before: String, last: Int): ContactConnection
 
   # Fetches an object given its ID
   node(
@@ -79,6 +135,16 @@ input RemoveCompletedTodosInput {
 type RemoveCompletedTodosPayload {
   deletedTodoIds: [String]
   viewer: User
+  clientMutationId: String
+}
+
+input RemoveContactInput {
+  id: ID!
+  clientMutationId: String
+}
+
+type RemoveContactPayload {
+  deletedContactId: ID
   clientMutationId: String
 }
 
@@ -132,6 +198,7 @@ type TodoEdge {
 type User implements Node {
   # The ID of an object
   id: ID!
+  contacts(search: String = "", after: String, first: Int, before: String, last: Int): ContactConnection
   todos(status: String = "any", after: String, first: Int, before: String, last: Int): TodoConnection
   totalCount: Int
   completedCount: Int
