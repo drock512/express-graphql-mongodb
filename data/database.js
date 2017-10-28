@@ -35,21 +35,28 @@ let nextTodoId = 0;
 addTodo('Taste JavaScript', true);
 addTodo('Buy a unicorn', false);
 
+const delayMs = 2000;
+const delay = val => new Promise((resolve) => {
+  setTimeout(() => {
+    resolve(val);
+  }, delayMs);
+});
+
 export function addContact(obj) {
   const contact = new Contact(obj);
-  return contact.save().then(doc => doc._id);
+  return contact.save().then(doc => doc._id).then(delay);
 }
 
 export function getContact(id) {
-  return Contact.findById(id);
+  return Contact.findById(id).then(delay);
 }
 
 export function getContacts(search) {
-  return Contact.find().exec();
+  return Contact.find().exec().then(delay);
 }
 
 export function changeContact(id, obj) {
-  return Contact.findByIdAndUpdate(id, obj, { new: true });
+  return Contact.findByIdAndUpdate(id, obj, { new: true }).then(delay);
 }
 
 export function removeContact(id) {
@@ -67,7 +74,7 @@ export function removeContact(id) {
         changedContacts: results
       };
     });
-  });
+  }).then(delay);
 }
 
 //----------------------------------

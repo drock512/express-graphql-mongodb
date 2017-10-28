@@ -32,6 +32,16 @@ div#root {
 	display: none;
 }
 
+.loading {
+  display: flex;
+  justify-content: center;
+  margin-top: 200px;
+  font-size: 24px;
+  color: #999;
+  width: 100%;
+  height: 100%;
+}
+
 .contactapp {
   display: flex;
   flex-direction: column;
@@ -44,7 +54,8 @@ div#root {
   flex: 0 0 60px;
   display: flex;
   width: 100%;
-  background: green;
+  color: white;
+  background: #7a39bc;
 }
 
 .appBody {
@@ -132,17 +143,118 @@ div#root {
   flex-direction: column;
 }
 
-.friendCount {
-  font-size: 12px;
+.contact-list li button:disabled {
+  cursor: auto;
 }
 
-.detailsContainer {
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  font-size: 24px;
+.friendCount {
+  color: #777;
+  font-size: 12px;
 }
 
 .smaller {
   font-size: 18px;
+}
+
+.buttonBar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.contactView {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  padding-right: 0;
+}
+
+.contactTopContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.contactInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.contactInfo div {
+  margin-bottom: 5px;
+}
+
+.contactInfo div:last-child {
+  margin-bottom: 0;
+}
+
+.contactName {
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.contactEmail {
+  font-size: 18px;
+  color: #777;
+}
+
+.contactActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.contactActions button {
+  margin-left: 3px;
+
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  height: 24px;
+}
+
+button.delete {
+  background: red;
+}
+
+button.add {
+  font-style: italic;
+  color: #777;
+}
+
+
+.friendsLabel {
+  font-size: 14px;
+  color: #777;
+}
+
+.friendsList ul {
+  margin: 5px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.friendsList ul li {
+  padding-left: 1em;
+  text-indent: -.7em;
+  color: #777;
+  font-size: 14px;
+}
+
+.friendsList ul li:before {
+  content: "• ";
+  color: #ea1d76;
+}
+
+.pendingContact {
+  padding: 10px;
+}
+
+.pending {
+  font-size: 12px;
+  font-style: italic;
+  color: #ea1d76;
 }

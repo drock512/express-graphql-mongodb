@@ -52,7 +52,7 @@ class ContactApp extends React.Component {
     return (
       <div className="contactapp">
         <div className="appHeader">
-          <h1>Contacts</h1>
+          <h1>GraphQL-Relay Contacts App</h1>
         </div>
         <div className="appBody">
           <div className="leftNav">

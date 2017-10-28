@@ -16,11 +16,16 @@ class ContactListItem extends React.Component {
   });
 
   render() {
+    const isPending = !!this.props.contact.id.match(/^client:newContact:/);
+
     return (
       <li className={this.props.isSelected ? "active" : null}>
-        <button onClick={this._handleClick}>
+        <button onClick={this._handleClick} disabled={isPending}>
           <div>{this.props.contact.name}</div>
           <div className="friendCount">{this.props.contact.totalFriends} Friends</div>
+          {isPending ? (
+            <div className="pending">Pending</div>
+          ) : null}
         </button>
       </li>
     );

@@ -38,7 +38,7 @@ class ContactList extends React.Component {
       <div className="contactList">
         <ul className="contact-list">
           <li className={this.props.selectedContact === null ? "active" : null}>
-            <button onClick={this._handleSelection.bind(null, null)}>Add Contact</button>
+            <button className="add" onClick={this._handleSelection.bind(null, null)}>Add Contact</button>
           </li>
           {this.renderContacts()}
         </ul>

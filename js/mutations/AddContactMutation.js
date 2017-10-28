@@ -63,6 +63,7 @@ function commit(
         const node = store.create(id, 'Contact');
         node.setValue(obj.name, 'name');
         node.setValue(obj.email, 'email');
+        node.setValue(obj.friends.length, 'totalFriends');
         node.setValue(id, 'id');
         const newEdge = store.create(
           'client:newEdge:' + tempID++,

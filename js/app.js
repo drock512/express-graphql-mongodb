@@ -27,6 +27,7 @@ import {
 } from 'relay-runtime';
 
 import ContactApp from './components/ContactApp';
+import Loading from './components/Loading';
 
 // Useful for debugging, but remember to remove for a production deploy.
 installRelayDevTools();
@@ -71,7 +72,7 @@ ReactDOM.render(
       if (props) {
         return <ContactApp viewer={props.viewer} />;
       } else {
-        return <div>Loading</div>;
+        return <Loading />;
       }
     }}
   />,

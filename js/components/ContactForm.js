@@ -24,7 +24,8 @@ class ContactForm extends React.Component {
     placeholder: PropTypes.string,
   };
   state = {
-    isEditing: false,
+    isEditing: this.props.initialValue ? true : false,
+    id: this.props.initialValue ? this.props.initialValue.id : null,
     name: this.props.initialValue ? this.props.initialValue.name : '',
     email: this.props.initialValue ? this.props.initialValue.email : '',
     friends: this.props.initialValue ? this.props.initialValue.friends : [],
@@ -77,7 +78,7 @@ class ContactForm extends React.Component {
       <div>
         <div className="smaller">Friends with:</div>
         {this.props.viewer.contacts.edges.map((edge) => {
-          if (edge && edge.node) {
+          if (edge && edge.node && edge.node.id !== this.state.id) {
             return (
               <div key={edge.node.id} className="smaller">
                 <input
@@ -100,27 +101,38 @@ class ContactForm extends React.Component {
 
   render() {
     return (
-      <div className="contactFormContainer">
-        <h3>Create New Contact</h3>
-        <div>
-          <input
-            className={"new-todo"}
-            onChange={this._handleNameChange}
-            placeholder={"Name"}
-            value={this.state.name}
-          />
-        </div>
-        <div>
-          <input
-            className={"new-todo"}
-            onChange={this._handleEmailChange}
-            placeholder={"Email"}
-            value={this.state.email}
-          />
-        </div>
-        {this.renderFriends()}
-        <div>
-          <button onClick={this._commitChanges}>Save</button>
+      <div className="contactView">
+        <div className="contactTopContainer">
+          <div className="contactInfo">
+            {this.state.isEditing ? (
+              <div className="contactName">Edit Contact</div>
+            ) : (
+              <div className="contactName">Create New Contact</div>
+            )}
+            <div>
+              <input
+                className={"new-todo"}
+                onChange={this._handleNameChange}
+                placeholder={"Name"}
+                value={this.state.name}
+              />
+            </div>
+            <div>
+              <input
+                className={"new-todo"}
+                onChange={this._handleEmailChange}
+                placeholder={"Email"}
+                value={this.state.email}
+              />
+            </div>
+            {this.renderFriends()}
+          </div>
+          <div className="contactActions">
+            <button onClick={this._commitChanges}>Save</button>
+            {this.props.onCancel ? (
+              <button className="delete" onClick={this.props.onCancel}>Cancel</button>
+            ) : null}
+          </div>
         </div>
       </div>
     );
