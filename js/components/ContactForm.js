@@ -39,8 +39,9 @@ class ContactForm extends React.Component {
       this.props.onSave({
         name: newName,
         email: newEmail,
+        friends: this.state.friends.slice(),
       });
-      this.setState({name: '', email: ''});
+      this.setState({name: '', email: '', friends: []});
     }
   };
 
@@ -51,27 +52,48 @@ class ContactForm extends React.Component {
     this.setState({email: e.target.value});
   };
   _handleFriendsChange = (e) => {
+    const target = e.target;
+    const value = target.checked;
+    const name = target.name;
+    let friends = this.state.friends;
+
+    if (value) {
+      // Add friend
+      friends.push(name);
+    } else {
+      // Remove friend
+      friends = friends.filter(f => f != name);
+    }
+
+    this.setState({
+      friends
+    });
   };
 
   renderFriends = () => {
-    console.log('DCM viewer', this.props.viewer)
     if (!this.props.viewer.contacts.edges.length) return null;
 
     return (
       <div>
         <div className="smaller">Friends with:</div>
-        {this.props.viewer.contacts.edges.map(edge => (
-          <div key={edge.node.id} className="smaller">
-            <input
-              type="checkbox"
-              name={edge.node.id}
-              checked={this.state.friends.indexOf(edge.node.id) !== -1}
-              onChange={this._handleFriendsChange}
-            />
-            {' '}
-            {edge.node.name}
-          </div>
-        ))}
+        {this.props.viewer.contacts.edges.map((edge) => {
+          if (edge && edge.node) {
+            return (
+              <div key={edge.node.id} className="smaller">
+                <input
+                  type="checkbox"
+                  name={edge.node.id}
+                  checked={this.state.friends.indexOf(edge.node.id) !== -1}
+                  onChange={this._handleFriendsChange}
+                />
+                {' '}
+                {edge.node.name}
+              </div>
+            );
+          }
+
+          return null;
+        })}
       </div>
     );
   };

@@ -23,9 +23,18 @@ const mutation = graphql`
 
 function sharedUpdater(store, user, newEdge) {
   const userProxy = store.get(user.id);
-  const conn = ConnectionHandler.getConnection(
+
+  // Add to list
+  let conn = ConnectionHandler.getConnection(
     userProxy,
     'ContactList_contacts',
+  );
+  ConnectionHandler.insertEdgeAfter(conn, newEdge);
+
+  // Add to form
+  conn = ConnectionHandler.getConnection(
+    userProxy,
+    'ContactForm_contacts',
   );
   ConnectionHandler.insertEdgeAfter(conn, newEdge);
 }

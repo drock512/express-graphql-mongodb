@@ -15,15 +15,21 @@ class ContactList extends React.Component {
   }
 
   renderContacts() {
-    return this.props.viewer.contacts.edges.map(edge =>
-      <ContactListItem
-        key={edge.node.id}
-        contact={edge.node}
-        isSelected={this.props.selectedContact === edge.node.id}
-        onSelect={this._handleSelection}
-        viewer={this.props.viewer}
-      />
-    );
+    return this.props.viewer.contacts.edges.map((edge) => {
+      if (edge && edge.node) {
+        return (
+          <ContactListItem
+            key={edge.node.id}
+            contact={edge.node}
+            isSelected={this.props.selectedContact === edge.node.id}
+            onSelect={this._handleSelection}
+            viewer={this.props.viewer}
+          />
+        );
+      }
+
+      return null;
+    });
   }
   render() {
     const numTodos = this.props.viewer.totalCount;

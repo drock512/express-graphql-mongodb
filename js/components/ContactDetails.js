@@ -12,13 +12,17 @@ import {
 import classnames from 'classnames';
 
 export default class ContactDetails extends React.Component {
+  _handleRemove = (contact) => {
+    this.props.onRemoveContact(contact);
+  };
+
   renderFriends = (friends) => {
     return (
       <div>
         <div className="smaller">Friends with:</div>
         <ul>
           {friends.map((f) => (
-            <li key={f.id}>f.name</li>
+            <li key={f.id}>{f.name}</li>
           ))}
         </ul>
       </div>
@@ -54,6 +58,9 @@ export default class ContactDetails extends React.Component {
           } else if (props) {
             return (
               <div className="detailsContainer">
+                <div className="buttonBar">
+                  <button onClick={this._handleRemove.bind(null, props.node)}>Remove Contact</button>
+                </div>
                 <div>{props.node.name}</div>
                 <div className="smaller">{props.node.email}</div>
                 {props.node.totalFriends ? this.renderFriends(props.node.friends) : <div className="smaller">Has No Friends</div>}

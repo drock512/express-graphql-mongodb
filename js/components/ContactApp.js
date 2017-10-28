@@ -4,6 +4,7 @@ import AddContactMutation from '../mutations/AddContactMutation';
 import ContactForm from './ContactForm';
 import ContactList from './ContactList';
 import ContactDetails from './ContactDetails';
+import RemoveContactMutation from '../mutations/RemoveContactMutation';
 
 import React from 'react';
 import {
@@ -19,6 +20,15 @@ class ContactApp extends React.Component {
   _handleSelection = (id) => {
     this.setState({selectedContact: id});
   };
+
+  _handleRemoveContact = (contact) => {
+    this.setState({ selectedContact: null });
+    RemoveContactMutation.commit(
+      this.props.relay.environment,
+      contact,
+      this.props.viewer
+    );
+  }
 
   _handleContactSave = (obj) => {
     AddContactMutation.commit(
@@ -48,6 +58,7 @@ class ContactApp extends React.Component {
               <ContactDetails
                 relay={this.props.relay}
                 selectedContact={this.state.selectedContact}
+                onRemoveContact={this._handleRemoveContact}
               />
             ) : (
               <ContactForm
