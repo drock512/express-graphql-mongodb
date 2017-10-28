@@ -268,12 +268,16 @@ const GraphQLRemoveContactMutation = mutationWithClientMutationId({
   outputFields: {
     deletedContactId: {
       type: GraphQLID,
-      resolve: ({id}) => id,
+      resolve: ({deletedContact}) => toGlobalId('Contact', deletedContact.id),
+    },
+    changedContacts: {
+      type: new GraphQLList(GraphQLContact),
+      resolve: ({changedContacts}) => changedContacts.map(c => getContact(c.id)),
     },
   },
   mutateAndGetPayload: ({id}) => {
     const localContactId = fromGlobalId(id).id;
-    return removeContact(localContactId).then((doc) => ({ id }));
+    return removeContact(localContactId);
   },
 });
 

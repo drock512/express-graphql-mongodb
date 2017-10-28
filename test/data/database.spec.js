@@ -99,11 +99,12 @@ describe("Database", function() {
 
       db.addContact(contact)
         .then((id) => db.removeContact(id))
-        .then((doc) => {
-          expect(doc).to.be.a('object');
-          expect(doc.name).to.equal(contact.name);
-          expect(doc.email).to.equal(contact.email);
-          expect(doc.friends).to.deep.equal(contact.friends);
+        .then((results) => {
+          expect(results).to.be.a('object');
+          expect(results.deletedContact).to.be.a('object');
+          expect(results.deletedContact.name).to.equal(contact.name);
+          expect(results.deletedContact.email).to.equal(contact.email);
+          expect(results.deletedContact.friends).to.deep.equal(contact.friends);
           done();
         })
         .catch((err) => {
@@ -133,20 +134,19 @@ describe("Database", function() {
           contactThatRemainsId = id;
           return db.removeContact(contactToRemoveId);
         })
-        .then((doc) => {
+        .then((results) => {
           // removed doc
-          expect(doc).to.be.a('object');
-          expect(doc.name).to.equal(contactToRemove.name);
-          expect(doc.email).to.equal(contactToRemove.email);
-          expect(doc.friends).to.deep.equal(contactToRemove.friends);
-          return db.getContact(contactThatRemainsId);
-        })
-        .then((doc) => {
-          // check that removed doc reference was deleted from friends
-          expect(doc).to.be.a('object');
-          expect(doc.name).to.equal('Another User');
-          expect(doc.email).to.equal('anotheruser@home.com');
-          expect(doc.friends).to.deep.equal([]);
+          expect(results).to.be.a('object');
+          expect(results.deletedContact).to.be.a('object');
+          expect(results.deletedContact.name).to.equal(contactToRemove.name);
+          expect(results.deletedContact.email).to.equal(contactToRemove.email);
+          expect(results.deletedContact.friends).to.deep.equal(contactToRemove.friends);
+
+          expect(results.changedContacts).to.be.an('array');
+          expect(results.changedContacts.length).to.equal(1);
+          expect(results.changedContacts[0].name).to.equal('Another User');
+          expect(results.changedContacts[0].email).to.equal('anotheruser@home.com');
+          expect(results.changedContacts[0].friends).to.deep.equal([]);
           done();
         })
         .catch((err) => {

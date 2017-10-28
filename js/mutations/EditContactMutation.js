@@ -10,6 +10,10 @@ const mutation = graphql`
         id
         name
         email
+        friends {
+          id
+          name
+        }
         totalFriends
       }
     }

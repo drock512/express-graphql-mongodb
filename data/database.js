@@ -61,7 +61,12 @@ export function removeContact(id) {
         return d.save();
       }));
     })
-    .then(() => doc);
+    .then((results) => {
+      return {
+        deletedContact: doc,
+        changedContacts: results
+      };
+    });
   });
 }
 

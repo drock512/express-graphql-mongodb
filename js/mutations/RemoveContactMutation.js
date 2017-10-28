@@ -7,7 +7,11 @@ import {ConnectionHandler} from 'relay-runtime';
 const mutation = graphql`
   mutation RemoveContactMutation($input: RemoveContactInput!) {
     removeContact(input: $input) {
-      deletedContactId
+      deletedContactId,
+      changedContacts {
+        id,
+        totalFriends
+      }
     }
   }
 `;

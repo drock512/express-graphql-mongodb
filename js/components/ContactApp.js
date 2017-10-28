@@ -5,6 +5,7 @@ import ContactForm from './ContactForm';
 import ContactList from './ContactList';
 import ContactDetails from './ContactDetails';
 import RemoveContactMutation from '../mutations/RemoveContactMutation';
+import EditContactMutation from '../mutations/EditContactMutation';
 
 import React from 'react';
 import {
@@ -21,6 +22,22 @@ class ContactApp extends React.Component {
     this.setState({selectedContact: id});
   };
 
+  _handleContactSave = (obj) => {
+    AddContactMutation.commit(
+      this.props.relay.environment,
+      obj,
+      this.props.viewer,
+    );
+  };
+
+  _handleEditContact = (contact, obj) => {
+    EditContactMutation.commit(
+      this.props.relay.environment,
+      obj,
+      contact
+    );
+  }
+
   _handleRemoveContact = (contact) => {
     this.setState({ selectedContact: null });
     RemoveContactMutation.commit(
@@ -29,14 +46,6 @@ class ContactApp extends React.Component {
       this.props.viewer
     );
   }
-
-  _handleContactSave = (obj) => {
-    AddContactMutation.commit(
-      this.props.relay.environment,
-      obj,
-      this.props.viewer,
-    );
-  };
 
   render() {
     const hasTodos = this.props.viewer.totalCount > 0;
@@ -59,6 +68,7 @@ class ContactApp extends React.Component {
                 relay={this.props.relay}
                 selectedContact={this.state.selectedContact}
                 onRemoveContact={this._handleRemoveContact}
+                onSaveContact={this._handleEditContact}
               />
             ) : (
               <ContactForm

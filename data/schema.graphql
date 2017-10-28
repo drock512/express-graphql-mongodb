@@ -145,6 +145,7 @@ input RemoveContactInput {
 
 type RemoveContactPayload {
   deletedContactId: ID
+  changedContacts: [Contact]
   clientMutationId: String
 }
 

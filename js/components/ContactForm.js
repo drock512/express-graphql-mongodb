@@ -17,7 +17,7 @@ class ContactForm extends React.Component {
   static propTypes = {
     className: PropTypes.string,
     commitOnBlur: PropTypes.bool.isRequired,
-    initialValue: PropTypes.string,
+    initialValue: PropTypes.object,
     onCancel: PropTypes.func,
     onDelete: PropTypes.func,
     onSave: PropTypes.func.isRequired,
@@ -25,9 +25,9 @@ class ContactForm extends React.Component {
   };
   state = {
     isEditing: false,
-    name: '',
-    email: '',
-    friends: [],
+    name: this.props.initialValue ? this.props.initialValue.name : '',
+    email: this.props.initialValue ? this.props.initialValue.email : '',
+    friends: this.props.initialValue ? this.props.initialValue.friends : [],
   };
   componentDidMount() {
     ReactDOM.findDOMNode(this).focus();

@@ -2,6 +2,7 @@ import ChangeTodoStatusMutation from '../mutations/ChangeTodoStatusMutation';
 import RemoveTodoMutation from '../mutations/RemoveTodoMutation';
 import RenameTodoMutation from '../mutations/RenameTodoMutation';
 import TodoTextInput from './TodoTextInput';
+import ContactForm from './ContactForm';
 
 import React from 'react';
 import {
@@ -12,8 +13,23 @@ import {
 import classnames from 'classnames';
 
 export default class ContactDetails extends React.Component {
+  state = {
+    isEditing: false
+  };
+
+  _toggleEdit = () => {
+    this.setState({
+      isEditing: !this.state.isEditing
+    });
+  };
+
   _handleRemove = (contact) => {
     this.props.onRemoveContact(contact);
+  };
+
+  _handleSave = (contact, obj) => {
+    this._toggleEdit();
+    this.props.onSaveContact(contact, obj);
   };
 
   renderFriends = (friends) => {
@@ -35,6 +51,10 @@ export default class ContactDetails extends React.Component {
         environment={this.props.relay.environment}
         query={graphql`
           query ContactDetailsQuery($contactID: ID!) {
+            viewer {
+              id,
+              ...ContactForm_viewer,
+            }
             node(id: $contactID) {
               id,
               ... on Contact {
@@ -56,10 +76,26 @@ export default class ContactDetails extends React.Component {
           if (error) {
             return <div>{error.message}</div>;
           } else if (props) {
-            return (
+            return this.state.isEditing ? (
+              <div className="detailsContainer">
+                <div className="buttonBar">
+                  <button onClick={this._toggleEdit}>Cancel</button>
+                </div>
+                <ContactForm
+                  viewer={props.viewer}
+                  initialValue={{
+                    name: props.node.name,
+                    email: props.node.email,
+                    friends: props.node.friends.map(f => f.id)
+                  }}
+                  onSave={this._handleSave.bind(null, props.node)}
+                />
+              </div>
+            ) : (
               <div className="detailsContainer">
                 <div className="buttonBar">
                   <button onClick={this._handleRemove.bind(null, props.node)}>Remove Contact</button>
+                  <button onClick={this._toggleEdit}>Edit Contact</button>
                 </div>
                 <div>{props.node.name}</div>
                 <div className="smaller">{props.node.email}</div>
