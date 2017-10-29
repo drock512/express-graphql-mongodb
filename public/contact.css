@@ -1,0 +1,260 @@
+html,
+body {
+	margin: 0;
+	padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+body {
+	font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	line-height: 1.4em;
+	background: #f5f5f5;
+	color: #4d4d4d;
+	min-width: 230px;
+	max-width: 550px;
+	margin: 0 auto;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	font-weight: 300;
+}
+
+div#root {
+  height: 100%;
+  width: 100%;
+}
+
+:focus {
+	outline: 0;
+}
+
+.hidden {
+	display: none;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  margin-top: 200px;
+  font-size: 24px;
+  color: #999;
+  width: 100%;
+  height: 100%;
+}
+
+.contactapp {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+.appHeader {
+  padding-left: 10px;
+  flex: 0 0 60px;
+  display: flex;
+  width: 100%;
+  color: white;
+  background: #7a39bc;
+}
+
+.appBody {
+  flex: 1;
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.leftNav {
+  flex: 0 0 200px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #ebebeb;
+}
+
+.mainWindow {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+}
+
+.contactFormContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.contactList {
+	margin: 0;
+	padding: 0;
+}
+
+.contact-list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.contact-list li {
+  padding: 10px;
+	position: relative;
+	font-size: 24px;
+	border-bottom: 1px solid #cdcdcd;
+}
+
+.contact-list li::hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.contact-list li.active {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.contact-list li.active::after {
+  content: '';
+  position: absolute;
+  top: 24px;
+  right: -1px;
+  height: 0;
+  width: 0;
+  display: block;
+  border: 10px solid transparent;
+  border-right-color: #f5f5f5;
+}
+
+.contact-list li:last-child {
+	border-bottom: none;
+}
+
+.contact-list li button {
+  outline: none;
+  box-shadow: none;
+  border-radius: 0;
+  border-color: transparent;
+  background-color: transparent;
+  padding: 10px;
+	font-size: 24px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-list li button:disabled {
+  cursor: auto;
+}
+
+.friendCount {
+  color: #777;
+  font-size: 12px;
+}
+
+.smaller {
+  font-size: 18px;
+}
+
+.buttonBar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.contactView {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  padding-right: 0;
+}
+
+.contactTopContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.contactInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.contactInfo div {
+  margin-bottom: 5px;
+}
+
+.contactInfo div:last-child {
+  margin-bottom: 0;
+}
+
+.contactName {
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.contactEmail {
+  font-size: 18px;
+  color: #777;
+}
+
+.contactActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.contactActions button {
+  margin-left: 3px;
+
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  height: 24px;
+}
+
+button.delete {
+  background: red;
+}
+
+button.add {
+  font-style: italic;
+  color: #777;
+}
+
+
+.friendsLabel {
+  font-size: 14px;
+  color: #777;
+}
+
+.friendsList ul {
+  margin: 5px 0;
+  padding: 0;
+  list-style: none;
+}
+
+.friendsList ul li {
+  padding-left: 1em;
+  text-indent: -.7em;
+  color: #777;
+  font-size: 14px;
+}
+
+.friendsList ul li:before {
+  content: "• ";
+  color: #ea1d76;
+}
+
+.pendingContact {
+  padding: 10px;
+}
+
+.pending {
+  font-size: 12px;
+  font-style: italic;
+  color: #ea1d76;
+}
