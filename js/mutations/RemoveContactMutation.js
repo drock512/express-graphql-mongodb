@@ -23,19 +23,27 @@ function sharedUpdater(store, user, deletedID) {
     userProxy,
     'ContactList_contacts',
   );
-  ConnectionHandler.deleteNode(
-    conn,
-    deletedID,
-  );
+
+  // If component is remove from DOM, then connection will be undefined
+  if (conn) {
+    ConnectionHandler.deleteNode(
+      conn,
+      deletedID,
+    );
+  }
 
   conn = ConnectionHandler.getConnection(
     userProxy,
     'ContactForm_contacts',
   );
-  ConnectionHandler.deleteNode(
-    conn,
-    deletedID,
-  );
+
+  // If component is remove from DOM, then connection will be undefined
+  if (conn) {
+    ConnectionHandler.deleteNode(
+      conn,
+      deletedID,
+    );
+  }
 }
 
 function commit(

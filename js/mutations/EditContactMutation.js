@@ -27,7 +27,7 @@ function getOptimisticResponse(obj, contact) {
         id: contact.id,
         name: obj.name,
         email: obj.email,
-        totalFriends: obj.friends.length
+        totalFriends: obj.friends.length,
       },
     },
   };
@@ -47,7 +47,7 @@ function commit(
           id: contact.id,
           name: obj.name,
           email: obj.email,
-          friends: obj.friends
+          friends: obj.friends,
         },
       },
       optimisticResponse: getOptimisticResponse(obj, contact),

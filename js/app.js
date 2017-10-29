@@ -61,13 +61,15 @@ ReactDOM.render(
   <QueryRenderer
     environment={modernEnvironment}
     query={graphql`
-      query appQuery {
+      query appQuery($cursor: String, $count: Int!) {
         viewer {
           ...ContactApp_viewer
         }
       }
     `}
-    variables={{}}
+    variables={{
+      count: 3,
+    }}
     render={({error, props}) => {
       if (props) {
         return <ContactApp viewer={props.viewer} />;

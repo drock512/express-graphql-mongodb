@@ -51,7 +51,7 @@ function commit(
     {
       mutation,
       variables: {
-        input: Object.assign({}, obj, { clientMutationId: tempID++ })
+        input: Object.assign({}, obj, { clientMutationId: tempID++ }),
       },
       updater: (store) => {
         const payload = store.getRootField('addContact');

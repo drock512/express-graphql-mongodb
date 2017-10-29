@@ -1,10 +1,4 @@
 import React from 'react';
-import {
-  QueryRenderer,
-  graphql,
-} from 'react-relay';
-
-import classnames from 'classnames';
 
 export default class ContactView extends React.Component {
   renderFriends = () => {
