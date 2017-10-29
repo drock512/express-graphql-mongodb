@@ -35,7 +35,7 @@ let nextTodoId = 0;
 addTodo('Taste JavaScript', true);
 addTodo('Buy a unicorn', false);
 
-const delayMs = 2000;
+const delayMs = 500;
 const delay = val => new Promise((resolve) => {
   setTimeout(() => {
     resolve(val);

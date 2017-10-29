@@ -1,9 +1,8 @@
-import TodoList from './TodoList';
-import TodoListFooter from './TodoListFooter';
 import AddContactMutation from '../mutations/AddContactMutation';
-import ContactForm from './ContactForm';
+import ContactFormContainer from './ContactFormContainer';
 import ContactList from './ContactList';
 import ContactDetails from './ContactDetails';
+import Welcome from './Welcome';
 import RemoveContactMutation from '../mutations/RemoveContactMutation';
 import EditContactMutation from '../mutations/EditContactMutation';
 
@@ -47,8 +46,32 @@ class ContactApp extends React.Component {
     );
   }
 
+  renderMainWindow = () => {
+    switch (this.state.selectedContact) {
+      case 'add':
+        return (
+          <ContactFormContainer
+            relay={this.props.relay}
+            onSave={this._handleContactSave}
+          />
+        );
+
+      case null:
+        return <Welcome />;
+
+      default:
+        return (
+          <ContactDetails
+            relay={this.props.relay}
+            selectedContact={this.state.selectedContact}
+            onRemoveContact={this._handleRemoveContact}
+            onSaveContact={this._handleEditContact}
+          />
+        );
+    }
+  }
+
   render() {
-    const hasTodos = this.props.viewer.totalCount > 0;
     return (
       <div className="contactapp">
         <div className="appHeader">
@@ -63,19 +86,7 @@ class ContactApp extends React.Component {
             />
           </div>
           <div className="mainWindow">
-            {this.state.selectedContact ? (
-              <ContactDetails
-                relay={this.props.relay}
-                selectedContact={this.state.selectedContact}
-                onRemoveContact={this._handleRemoveContact}
-                onSaveContact={this._handleEditContact}
-              />
-            ) : (
-              <ContactForm
-                viewer={this.props.viewer}
-                onSave={this._handleContactSave}
-              />
-            )}
+            {this.renderMainWindow()}
           </div>
         </div>
       </div>
@@ -87,8 +98,6 @@ export default createFragmentContainer(ContactApp, {
   viewer: graphql`
     fragment ContactApp_viewer on User {
       id,
-      totalCount,
-      ...ContactForm_viewer,
       ...ContactList_viewer,
     }
   `,

@@ -7,9 +7,6 @@ import ReactDOM from 'react-dom';
 
 const PropTypes = require('prop-types');
 
-const ENTER_KEY_CODE = 13;
-const ESC_KEY_CODE = 27;
-
 class ContactForm extends React.Component {
   static defaultProps = {
     commitOnBlur: false,
@@ -24,7 +21,7 @@ class ContactForm extends React.Component {
     placeholder: PropTypes.string,
   };
   state = {
-    isEditing: this.props.initialValue ? true : false,
+    isEditing: !!this.props.initialValue,
     id: this.props.initialValue ? this.props.initialValue.id : null,
     name: this.props.initialValue ? this.props.initialValue.name : '',
     email: this.props.initialValue ? this.props.initialValue.email : '',
@@ -67,12 +64,16 @@ class ContactForm extends React.Component {
     }
 
     this.setState({
-      friends
+      friends,
     });
   };
 
   renderFriends = () => {
-    if (!this.props.viewer.contacts.edges.length) return null;
+    if (!this.props.viewer.contacts ||
+        !this.props.viewer.contacts.edges ||
+        !this.props.viewer.contacts.edges.length) {
+      return null;
+    }
 
     return (
       <div>
@@ -111,17 +112,15 @@ class ContactForm extends React.Component {
             )}
             <div>
               <input
-                className={"new-todo"}
                 onChange={this._handleNameChange}
-                placeholder={"Name"}
+                placeholder={'Name'}
                 value={this.state.name}
               />
             </div>
             <div>
               <input
-                className={"new-todo"}
                 onChange={this._handleEmailChange}
-                placeholder={"Email"}
+                placeholder={'Email'}
                 value={this.state.email}
               />
             </div>

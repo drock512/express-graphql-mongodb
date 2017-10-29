@@ -1,8 +1,4 @@
-import ChangeTodoStatusMutation from '../mutations/ChangeTodoStatusMutation';
-import RemoveTodoMutation from '../mutations/RemoveTodoMutation';
-import RenameTodoMutation from '../mutations/RenameTodoMutation';
-import TodoTextInput from './TodoTextInput';
-import ContactForm from './ContactForm';
+import ContactFormContainer from './ContactFormContainer';
 import ContactView from './ContactView';
 import Loading from './Loading';
 
@@ -12,16 +8,14 @@ import {
   graphql,
 } from 'react-relay';
 
-import classnames from 'classnames';
-
 export default class ContactDetails extends React.Component {
   state = {
-    isEditing: false
+    isEditing: false,
   };
 
   _toggleEdit = () => {
     this.setState({
-      isEditing: !this.state.isEditing
+      isEditing: !this.state.isEditing,
     });
   };
 
@@ -34,16 +28,14 @@ export default class ContactDetails extends React.Component {
     this.props.onSaveContact(contact, obj);
   };
 
+  _getRelay = () => this.props.relay;
+
   render() {
     return (
       <QueryRenderer
         environment={this.props.relay.environment}
         query={graphql`
           query ContactDetailsQuery($contactID: ID!) {
-            viewer {
-              id,
-              ...ContactForm_viewer,
-            }
             node(id: $contactID) {
               id,
               ... on Contact {
@@ -66,13 +58,13 @@ export default class ContactDetails extends React.Component {
             return <div>{error.message}</div>;
           } else if (props) {
             return this.state.isEditing ? (
-              <ContactForm
-                viewer={props.viewer}
+              <ContactFormContainer
+                relay={this._getRelay()}
                 initialValue={{
                   id: props.node.id,
                   name: props.node.name,
                   email: props.node.email,
-                  friends: props.node.friends.map(f => f.id)
+                  friends: props.node.friends.map(f => f.id),
                 }}
                 onSave={this._handleSave.bind(null, props.node)}
                 onCancel={this._toggleEdit}
