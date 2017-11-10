@@ -5,11 +5,16 @@
  - brew install watchman
 
 ## Vagrant box setup/config on puphpet
+
+Setting up a virtual machine is not necessary.  I did it so that I didn't clutter my computer with a MongoDB instance.
+If you want to setup a VM, then you'll first need to install VirtualBox and Vagrant as the following steps assume you
+have those installed.  For the rest of the steps in this section, go to www.puphpet.com and enter the values below.
+
  - OS: Ubuntu Trusty
  - Folder Source: /Users/dalemcneill/Projects/express-graphql-mongodb
 
 ### NGINX
- - contacts.dev (and www.contacts.dev)
+ - contacts.dev (and www.contacts.com)
  - project root: /var/www
  - location root: /var/www
  - proxy: http://localhost:3000
@@ -24,23 +29,38 @@
 ### MongoDB
  - Install with defaults
 
+## Building the virtual machine
+
+Once you download the puphpet config, unzip it and place it where ever you like to put VMs.  Then run the following.
+
+```
+> vagrant up
+```
+
 ## Post Vagrant Up
 
-### Upgrade to latest npm
- - sudo npm install npm -g
+### Setup Hosts
 
-### Upgrade to latest node
- - sudo npm cache clean -f
- - sudo npm install -g n
- - sudo n stable
+Add the following line to your /etc/hosts file
 
-### Extra to fix npm install hangs
- - (still needed?) sudo chown -R $USER:$(id -gn $USER) /home/vagrant/.config
+```
+192.168.56.101  contacts.com www.contacts.com
+```
+
+### Upgrade to latest npm and node
+
+```
+> vagrant ssh
+> sudo npm install npm -g
+> sudo npm cache clean -f
+> sudo npm install -g n
+> sudo n stable
+```
 
 ## Installation
 
 ```
-npm install
+> npm install
 ```
 
 ## Running
@@ -48,19 +68,20 @@ npm install
 Set up generated files:
 
 ```
-npm run update-schema
+> npm run update-schema
 ```
 
 From local machine:
+This needs to be run from the local machine because the relay-compiler uses watchman to determine what files have changed.
 
 ```
-npm run build
+> npm run build
 ```
 
 Start a local server:
 
 ```
-npm start
+> npm start
 ```
 
 ## Developing
@@ -72,7 +93,7 @@ If at any time you make changes to `data/schema.js`, stop the server,
 regenerate `data/schema.graphql`, and restart the server:
 
 ```
-npm run update-schema
-npm run build
-npm start
+> npm run update-schema
+> npm run build
+> npm start
 ```
